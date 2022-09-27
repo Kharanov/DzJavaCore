@@ -1,14 +1,17 @@
 package DZ6;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, JsonProcessingException, JsonMappingException {
         OkHttpClient okhttp = new OkHttpClient()
                 .newBuilder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -34,5 +37,17 @@ public class Main {
         System.out.println(response.isSuccessful());
         System.out.println(response.protocol());
         System.out.println(response.receivedResponseAtMillis());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        WeatherResponse weatherResponse = objectMapper.readValue(body, WeatherResponse.class);
+
+        System.out.println(weatherResponse.getGeoObject().getProvince().getName());
+        for (int i = 0; i < 5; i++) {
+            List<Forecast> forecasts = weatherResponse.getForecasts();
+            Forecast forecast = forecasts.get(i);
+            Day day = forecast.getParts().getDay();
+            System.out.println("V gorode " + weatherResponse.getGeoObject().getProvince().getName() + " na daty " + forecast.getDate() + " ozhidaetsya " + day.getCondition() + " temperatyra " + day.getTemperature());
+        }
     }
 }

@@ -6,15 +6,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Day {
     @JsonProperty(value = "temp_avg")
-    private String temperature;
+    private Double temperature;
     private String condition;
 
     public Day() {}
 
-    public String getTemperature() {
+    public Double getTemperature() {
         return temperature;
     }
-    public void setTemperature(String temperature) {
+    public void setTemperature(Double temperature) {
         this.temperature=temperature;
     }
     public String getCondition() {
